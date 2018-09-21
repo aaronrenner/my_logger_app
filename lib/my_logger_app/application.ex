@@ -6,6 +6,8 @@ defmodule MyLoggerApp.Application do
   use Application
 
   def start(_type, _args) do
+    Logger.add_backend(MyLoggerApp.LoggerBackend)
+
     # List all child processes to be supervised
     children = [
       # Starts a worker by calling: MyLoggerApp.Worker.start_link(arg)
@@ -16,5 +18,9 @@ defmodule MyLoggerApp.Application do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: MyLoggerApp.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  def stop(_state) do
+    Logger.remove_backend(MyLoggerApp.LoggerBackend)
   end
 end
